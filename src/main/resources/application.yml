@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/querydsl?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: Coco123!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+logging:
+  level:
+    org.hibernate.sql: debug
+    org.hibernate.type: trace # parameter 값 보기
+
+decorator:
+  datasource:
+    # p6spy 설정 적용
+    p6spy:
+      enable-logging: true
+      multiline: true
+      logging: slf4j
