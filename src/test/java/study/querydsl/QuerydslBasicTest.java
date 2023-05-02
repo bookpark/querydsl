@@ -672,4 +672,42 @@ public class QuerydslBasicTest {
         return usernameEq(usernameCond).and(ageEq(ageCond));
     }
 
+    @Test
+    public void bulkUpdate() {
+        // UPDATE는 영속성 컨텍스트를 무시하고 DB 수정
+        // DB의 상태와 영속성 컨텍스트의 상태가 달라짐
+        // 영속성 컨텍스트 > DB의 값
+        queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+        em.flush(); // 벌크 연산 후에는 초기화 하는 것이 좋다
+        em.clear(); // 벌크 연산 후에는 초기화 하는 것이 좋다
+
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        for (Member member1 : result) {
+            System.out.println("member1 = " + member1);
+        }
+    }
+
+    @Test
+    public void bulkAdd() {
+        queryFactory
+                .update(member)
+                .set(member.age, member.age.add(1))
+                .execute();
+    }
+
+    @Test
+    public void bulkDelete() {
+        queryFactory
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
+    }
+
 }
